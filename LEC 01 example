@@ -1,0 +1,49 @@
+CREATE TYPE uni_t2 AS OBJECT(
+uno CHAR(5),
+uname VARCHAR2(30),
+
+)
+/
+
+
+CREATE TYPE course_t2 AS OBJECT(
+cno CHAR(5),
+cname VARCHAR(20),
+crate FLOAT,
+unicourse REF uni_t2
+)
+/
+
+
+==== Now create UNIVERCITIES2 Table ===
+
+CREATE TABLE univercities2 OF uni_t2(
+uno PRIMARY KEY
+)
+/
+
+
+==== Now create COURSES2 Table ===
+
+CREATE TABLE courses2 OF course_t2(
+cno PRIMARY KEY
+)
+/
+
+
+=== insert data in to univercity ===
+
+INSERT INTO univercities2 VALUES(uni_t2('uni1','SLIIT'))
+/
+
+=== insert data in to COURSE ===
+
+INSERT INTO courses2 VALUES(course_t2('c01','DS',3.2,(SELECT REF(U) FROM universities2 U WHERE U.no = 'uni1')))
+/
+
+== RETRIVIEW THE THAT INSERT DATAS ==
+
+SELECT VALUE(c) FROM courses2 c
+/
+ 
+

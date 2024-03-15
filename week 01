@@ -1,0 +1,27 @@
+CREATE TYPE dept_t AS OBJECT(
+dno CHAR(5),
+dname VARCHAR2(20)
+)
+/
+
+
+CREATE TYPE emp_t AS OBJECT(
+eid CHAR(5),
+ename VARCHAR(30),
+salary FLOAT,
+workdept REF dept_t
+)
+/
+
+
+create tables;
+
+CREATE TABLE departments OF dept_t(
+dno PRIMARY KEY
+)
+/
+
+CREATE TABLE employees OF emp_t(
+eid PRIMARY KEY
+)
+/

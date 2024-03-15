@@ -1,0 +1,56 @@
+===== crate types =====
+
+CREATE TYPE dept_t1 /
+
+CREATE TYPE emp_t AS OBJECT(
+	eno NUMBER(4),
+	ename VARCHAR2(15),
+	edept REF dept_t1,
+	salary NUMBER(8,2)
+)
+/
+
+CREATE TYPE dept_t1 AS OBJECT(
+	dno NUMBER(2),
+	dname VARCHAR2(12),
+	mgr REF emp_t
+)
+/
+
+
+
+
+===== create table =====
+
+CREATE TABLE employees OF emp_t(
+	eno PRIMARY KEY
+)
+/
+
+CREATE TABLE departments OF dept_t1(
+	dno PRIMARY KEY,
+	CONSTRAINT department_fk FOREIGN KEY(mgr) REFERENCES employees 
+)
+/
+
+
+
+ALTER TABLE employees
+ADD CONSTRAINT employee_fk FOREIGN KEY(edept) REFERENCES departments
+/
+
+
+===== insert values =====
+
+INSERT INTO departments VALUES(dept_t1(10,'ICT',NULL));
+
+INSERT INTO employees VALUES(emp_t(1000,'Mr Perera',( SELECT REF(d) FROM departments d where d.dno = 10 ),450000));
+
+UPDATE departments d
+SET d.mgr = ( SELECT REF(e) FROM employees e where e.eno = 1000)
+WHERE d.dno = 10
+/
+	
+	
+SELECT d.mgr.ename from departments d;
+

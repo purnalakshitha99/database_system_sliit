@@ -1,0 +1,101 @@
+CREATE TYPE sales_t AS OBJECT(
+	unit_price NUMBER(4,2),
+	date DATE,
+	qty NUMBER(3)
+)
+/
+
+---------- uda hadagaththa nested type ekata list ekak widiht type ekak hdagannawa table ekak
+
+CREATE TYPE sales_list AS TABLE OF sales_t
+/
+
+---------- dan single table ekata type ekak hada gatta ekata dana multiple object dann wenwa type ek use krala list ekak hada gatta
+dan individual table  eka hadamu
+
+CREATE TYPE individual_t AS OBJECT(
+	id CHAR(3),
+	name VARCHAR(15),
+	sales sales_list
+)
+/ 
+
+---------- dan api individual type ekata table ekak hadala innwa
+
+CREATE TABLE individual OF individual_t(
+	id PRIMARY KEY
+)
+
+---------- dan me individual table eka athulene nested eka thiyenne eka set kara gannawa
+
+NESTED TABLE sales STORE AS sales_table
+/
+
+
+---------- individual table ekata values insert karamu
+
+INSERT INTO individual VALUES
+(individual_t('001','supun',
+	sales_list
+		(sales_t(8.00,'10-DEC-21',300),
+	           sales_t(20.00,'12-DEC-22',340)
+)))
+/
+
+
+
+---------- SELECT QUERY ======
+
+SELECT *
+FROM ( SELECT a.sales
+	FROM individual a,
+	WHERE a.id = 001
+	)
+	/
+----001 ta adala sales nested eke okkoma display krnn
+
+------------- second method (UNNESTED TABLE)========
+
+SELECT a.id,s.*
+FROM individual a,TABLE(a.sales) s
+/
+----- 001 ta adala okkoma
+
+
+========== INSERT VALUE FOR NESTED TABLE ==================
+
+INSERT INTO TABLE( SELECT a.sales
+	         FROM individual a
+	         WHERE a.id = '001'
+	         )
+VALUES(10.00,'2O-DEC-22',450)
+/
+
+
+=========== UPDATE SPECIFIC INDIVIDUAL SALES DATA ( SALES kiyl thiyena nested eka athule values change karnwa ) ============
+
+UPDATE TABLE ( SELECT a.sales
+	     FROM individual a
+	     WHERE a.id = '001'
+	    ) p
+SET p.qty = 230
+WEHRE p.date = '20-DEC-22'
+/
+
+=========== DELETE SPECIFIC INDIVIDUAL SALES ROW ( SALES kiyl thiyena nested EKE row ekak ) ============
+
+DELETE TABLE ( SELECT a.sales
+	     FROM individual a
+	     WHERE a.id = '001'
+	    ) p
+WHERE p.date = '20-DEC-22'
+/
+
+
+========== DROP THE SALES FULL NESTED TABLE IN SPECIFIC INDIVIDUAL ID ( 001 ta adala full nested table ekama delete karanawa )========================
+
+UPDATE individual a
+SET a.sales = NULL
+WHERE a.id = '001'
+
+

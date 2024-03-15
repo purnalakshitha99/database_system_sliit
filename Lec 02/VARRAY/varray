@@ -1,0 +1,48 @@
+===== VARRAY 01 =====
+
+Type ekak hadanne na kelinma table ekak hadala  ekata data set karanwa-----------
+mekata wenama table eken constructor ekak hadala inn one na pahala anith method ekedi type eken constuctor ekak hdala thama values set karanne
+
+CREATE TYPE price_arr AS 
+VARRAY(10) OF NUMBER(12,2)
+/
+
+
+CREATE TABLE pricelist(
+	pno INTEGER,
+	prices price_arr
+);
+
+
+INSERT INTO pricelist VALUES(1,price_arr(2.50,3,75,4.25));
+	
+SELECT * FROM pricelist;
+
+SELECT pno,s.COLUMN_VALUE price
+FROM pricelist p,TABLE(p.prices)s
+
+
+
+======== v array 2 ==========
+
+Type ekak hadala ekata data set karanwa-----------
+
+CREATE TYPE addr_arr AS VARRAY(5) OF VARCHAR2(15)
+/
+
+CREATE TYPE personal_t AS OBJECT(
+	id CHAR(3),
+	name VARCHAR(10),
+	address addr_arr
+)
+/
+
+CREATE TABLE personal OF personal_t(
+	id PRIMARY KEY
+)
+/
+
+INSERT INTO personal VALUES(personal_t('101','sandun',addr_arr('327','malabe road','koswaththa')))
+
+ 
+/

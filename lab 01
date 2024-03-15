@@ -1,0 +1,69 @@
+lab 01
+
+
+
+CREATE TABLE CLIENT(
+clno CHAR(3),
+name VARCHAR(30),
+address VARCHAR2(30),
+CONSTRAINT client_PK PRIMARY KEY(clno)
+)
+/
+
+
+CREATE TABLE stock(
+company CHAR(7),
+price NUMBER(6,2),
+dividend NUMBER(4,2),
+eps NUMBER(4,2),
+CONSTRAINT table_PK PRIMARY KEY(company)
+)
+/
+
+
+CREATE TABLE trading(
+company CHAR(7),
+exchange VARCHAR(12),
+CONSTRAINT trading_PK PRIMARY KEY(company,exchange),
+CONSTRAINT trading_FK FOREIGN KEY(company) REFERENCES stock
+)
+/
+
+
+CREATE TABLE purchase(
+clno CHAR(7),
+company VARCHAR(7),
+pdate DATE,
+qty NUMBER,
+price NUMBER(6,2)
+CONSTRAINT purchase_PK PRIMARY KEY(clno,company,pdate),
+CONSTRAINT purchase_FK1 FOREIGN KEY(clno) REFERENCES client,
+CONSTRAINT purchase_FK2 FOREIGN KEY(company) REFERENCES stock
+)
+/
+
+=== another method ====
+
+CREATE TABLE purchase(
+clno CHAR(3),
+company CHAR(7),
+pdate date,
+qty NUMBER(6),
+price NUMBER(6,2),
+PRIMARY KEY (clno,company,pdate),
+FOREIGN KEY(clno) REFERENCES client(clno),
+FOREIGN KEY(company) REFERENCES stock(company)
+)
+/
+
+CREATE TABLE purchase (
+  clno CHAR(7),
+  company CHAR(7),
+  pdate DATE,
+  qty NUMBER,
+  price NUMBER(6,2),
+  CONSTRAINT purchase_PK PRIMARY KEY (clno, company, pdate),
+  CONSTRAINT purchase_FK1 FOREIGN KEY (clno) REFERENCES client(clno),
+  CONSTRAINT purchase_FK2 FOREIGN KEY (company) REFERENCES stock(company)
+);
+

@@ -1,0 +1,41 @@
+create table client(
+clno char(3),
+name varchar(12),
+address varchar(30),
+constraint client_pk primary key(clno)
+)
+/
+
+create table stock(
+company char(7),
+price number(6,2),
+dividend number(4,2),
+eps number(4,2),
+constraint stock_pk primary key(company)
+)
+/
+
+create table trading(
+company char(7),
+exchange varchar(12),
+constraint trading_pk primary key(company,exchange),
+constraint trading_fk foreign key(company) references stock 
+)
+/
+
+create table purchase(
+clno char(3),
+company char(7),
+pdate date,
+qty number(6),
+price number(6,2),
+constraint purchase_pk primary key(clno,company,pdate),
+constraint purchase_fk1 foreign key(clno) references client,
+constraint purchase_fk2 foreign key(company) references stock
+)
+/
+
+select c.name,p.company,s.price,s.dividend,s.eps
+from client c,stock s,purchase p
+where c.clno = p.clno and s.company=p.company
+
