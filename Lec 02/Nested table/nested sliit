@@ -1,0 +1,54 @@
+1)
+
+CREATE TYPE proj_t AS OBJECT(
+	projno NUMBER(3),
+	projname VARCHAR(20)
+);
+
+
+
+
+2) --- type eken list ekak hadanwa
+
+CREATE TYPE proj_list AS TABLE OF proj_t
+/
+
+
+
+3)--- main table eka hadann kalin ekata adala table eke type ek hadagena innwa
+
+CREATE TYPE emp_t AS OBJECT(
+	eno NUMBER(3),
+	ename VARCHAR(20),
+	projects proj_list
+);
+
+4)--- main table eka hadanwa
+
+CREATE TABLE employee OF emp_t(
+	eno PRIMARY KEY
+)
+NESTED TABLE projects STORE AS employees_proj_table
+
+
+
+A)
+
+INSERT INTO employee VALUES(emp_t(230,'anjula',proj_list(proj_t(20,'greencare'),proj_t(21,'automart'))));
+
+
+B)
+
+SELECT *
+FROM TABLE ( SELECT t.projects
+	   FROM employee t
+	   WHERE t.eno = 230
+	   );
+
+B1)
+
+(unnesting)
+
+SELECT e.eno,p.*
+FROM employee e,Table(e.projects) p;
+
